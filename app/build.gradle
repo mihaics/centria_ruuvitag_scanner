@@ -30,4 +30,7 @@ dependencies {
     compile 'org.altbeacon:android-beacon-library:2+'
     compile 'pl.pawelkleczkowski.customgauge:CustomGauge:1.0.3'
     compile 'com.jjoe64:graphview:4.2.1'
+    compile 'com.android.volley:volley:1.0.0'
+    compile 'com.google.code.gson:gson:2.6.2'
+    compile 'com.loopj.android:android-async-http:1.4.9'
 }

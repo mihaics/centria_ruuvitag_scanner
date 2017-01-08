@@ -2,19 +2,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="#404040"
+    android:padding="10dp">
 
-
-    <TextView
-        android:id="@+id/secondLine"
-        android:layout_width="fill_parent"
-        android:layout_height="26dip"
-        android:ellipsize="marquee"
-        android:text="Description"
-        android:gravity="center_vertical"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:textSize="15sp" />
 
     <pl.pawelkleczkowski.customgauge.CustomGauge
         android:id="@+id/gaugeRssi"
@@ -29,13 +20,13 @@
         app:gaugePointStartColor="#ff0000"
         app:gaugePointEndColor="#ff0000"
         app:gaugePointSize="5"
-        app:gaugeStartAngle="180"
-        app:gaugeSweepAngle="180"
+        app:gaugeStartAngle="100"
+        app:gaugeSweepAngle="330"
         app:gaugeStrokeCap="BUTT"
         app:gaugeStrokeColor="#AAAAAA"
         app:gaugeStrokeWidth="7dp"
-        app:gaugeStartValue="-100"
-        app:gaugeEndValue="100"/>
+        app:gaugeStartValue="-150"
+        app:gaugeEndValue="0"/>
 
 
     <TextView
@@ -52,173 +43,210 @@
         android:textStyle="bold" />
 
     <LinearLayout
-        android:id="@+id/layoutHuminidity"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/gaugeRssi"
-        android:orientation="horizontal"
-        >
-        <TextView
-            android:id="@+id/titleHuminidity"
-            android:layout_width="match_parent"
-            android:layout_height="20dip"
-            android:layout_toLeftOf="@id/gaugeRssi"
-            android:ellipsize="marquee"
-            android:text="Huminidity"
-            android:gravity="center_vertical"
-            android:layout_centerVertical="true"
-            android:textSize="15sp"
-            android:layout_weight="1"/>
-        <RelativeLayout
+        android:layout_below="@id/gaugeRssi">
+
+        <LinearLayout
+            android:id="@+id/layoutPressure"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/layoutTemperature"
+            android:orientation="vertical"
             android:layout_weight="1">
-            <pl.pawelkleczkowski.customgauge.CustomGauge
-                android:id="@+id/gaugeHuminidity"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:paddingBottom="5dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:paddingTop="5dp"
-                android:layout_centerInParent="true"
-                app:gaugePointStartColor="#ff0000"
-                app:gaugePointEndColor="#ff0000"
-                app:gaugePointSize="5"
-                app:gaugeStartAngle="180"
-                app:gaugeSweepAngle="180"
-                app:gaugeStrokeCap="BUTT"
-                app:gaugeStrokeColor="#206090"
-                app:gaugeStrokeWidth="7dp"
-                app:gaugeStartValue="0"
-                app:gaugeEndValue="100"/>
-            <TextView
-                android:id="@+id/textViewHuminidity"
+
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_alignLeft="@+id/gaugeHuminidity"
-                android:layout_alignRight="@+id/gaugeHuminidity"
-                android:layout_alignTop="@+id/gaugeHuminidity"
-                android:layout_alignBottom="@+id/gaugeHuminidity"
-                android:text="0"
-                android:textSize="10dp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical|center_horizontal">
+                <pl.pawelkleczkowski.customgauge.CustomGauge
+                    android:id="@+id/gaugePressure"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingTop="5dp"
+                    android:layout_centerInParent="true"
+                    app:gaugePointStartColor="#ff0000"
+                    app:gaugePointEndColor="#ff0000"
+                    app:gaugePointSize="5"
+                    app:gaugeStartAngle="110"
+                    app:gaugeSweepAngle="300"
+                    app:gaugeStrokeCap="BUTT"
+                    app:gaugeStrokeColor="#202020"
+                    app:gaugeStrokeWidth="7dp"
+                    app:gaugeStartValue="800"
+                    app:gaugeEndValue="1200"/>
+                <TextView
+                    android:id="@+id/textViewPressure"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_alignLeft="@+id/gaugePressure"
+                    android:layout_alignRight="@+id/gaugePressure"
+                    android:layout_alignTop="@+id/gaugePressure"
+                    android:layout_alignBottom="@+id/gaugePressure"
+                    android:text="0"
+                    android:textSize="10dp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+            <TextView
+                android:id="@+id/titlePressure"
+                android:layout_width="wrap_content"
+                android:layout_height="20dip"
+                android:ellipsize="marquee"
+                android:text="Pressure"
+                android:gravity="center_vertical"
+                android:layout_centerVertical="true"
+                android:textSize="10sp"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:textColor="#ffffff" />
+        </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/layoutTemperature"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/layoutHuminidity"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical|center_horizontal">
+                <pl.pawelkleczkowski.customgauge.CustomGauge
+                    android:id="@+id/gaugeTemperature"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingTop="5dp"
+                    android:layout_centerInParent="true"
+                    app:gaugePointStartColor="#ff0000"
+                    app:gaugePointEndColor="#ff0000"
+                    app:gaugePointSize="5"
+                    app:gaugeStartAngle="120"
+                    app:gaugeSweepAngle="300"
+                    app:gaugeStrokeCap="BUTT"
+                    app:gaugeStrokeColor="#202020"
+                    app:gaugeStrokeWidth="7dp"
+                    app:gaugeStartValue="-40"
+                    app:gaugeEndValue="40"/>
+                <TextView
+                    android:id="@+id/textViewTemperature"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_alignLeft="@+id/gaugeTemperature"
+                    android:layout_alignRight="@+id/gaugeTemperature"
+                    android:layout_alignTop="@+id/gaugeTemperature"
+                    android:layout_alignBottom="@+id/gaugeTemperature"
+                    android:text="0"
+                    android:textSize="10dp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+            <TextView
+                android:id="@+id/titleTemperature"
+                android:layout_width="wrap_content"
+                android:layout_height="20dip"
+                android:ellipsize="marquee"
+                android:text="Temperature"
+                android:gravity="center_vertical"
+                android:layout_centerVertical="true"
+                android:textSize="10sp"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:textColor="#ffffff" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutHuminidity"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/gaugeRssi"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical|center_horizontal">
+                <pl.pawelkleczkowski.customgauge.CustomGauge
+                    android:id="@+id/gaugeHuminidity"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingTop="5dp"
+                    android:layout_centerInParent="true"
+                    app:gaugePointStartColor="#ff0000"
+                    app:gaugePointEndColor="#ff0000"
+                    app:gaugePointSize="5"
+                    app:gaugeStartAngle="120"
+                    app:gaugeSweepAngle="300"
+                    app:gaugeStrokeCap="BUTT"
+                    app:gaugeStrokeColor="#202020"
+                    app:gaugeStrokeWidth="7dp"
+                    app:gaugeStartValue="0"
+                    app:gaugeEndValue="100"/>
+                <TextView
+                    android:id="@+id/textViewHuminidity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_alignLeft="@+id/gaugeHuminidity"
+                    android:layout_alignRight="@+id/gaugeHuminidity"
+                    android:layout_alignTop="@+id/gaugeHuminidity"
+                    android:layout_alignBottom="@+id/gaugeHuminidity"
+                    android:text="0"
+                    android:textSize="10dp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+            <TextView
+                android:id="@+id/titleHuminidity"
+                android:layout_width="wrap_content"
+                android:layout_height="20dip"
+                android:ellipsize="marquee"
+                android:text="Huminidity"
+                android:gravity="center_vertical"
+                android:layout_centerVertical="true"
+                android:textSize="10sp"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:textColor="#ffffff" />
+
+        </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/layoutTemperature"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/beaconTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="26dip"
+        android:ellipsize="marquee"
+        android:text="Description"
+        android:gravity="center_vertical"
+        android:textSize="15sp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/layoutHuminidity"
-        android:orientation="horizontal"
-        >
-        <TextView
-            android:id="@+id/titleTemperature"
-            android:layout_width="match_parent"
-            android:layout_height="20dip"
-            android:ellipsize="marquee"
-            android:text="Temperature"
-            android:gravity="center_vertical"
-            android:layout_centerVertical="true"
-            android:textSize="15sp"
-            android:layout_weight="1"/>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-            <pl.pawelkleczkowski.customgauge.CustomGauge
-                android:id="@+id/gaugeTemperature"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:paddingBottom="5dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:paddingTop="5dp"
-                android:layout_centerInParent="true"
-                app:gaugePointStartColor="#ff0000"
-                app:gaugePointEndColor="#ff0000"
-                app:gaugePointSize="5"
-                app:gaugeStartAngle="180"
-                app:gaugeSweepAngle="180"
-                app:gaugeStrokeCap="BUTT"
-                app:gaugeStrokeColor="#206090"
-                app:gaugeStrokeWidth="7dp"
-                app:gaugeStartValue="-40"
-                app:gaugeEndValue="40"/>
-            <TextView
-                android:id="@+id/textViewTemperature"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_alignLeft="@+id/gaugeTemperature"
-                android:layout_alignRight="@+id/gaugeTemperature"
-                android:layout_alignTop="@+id/gaugeTemperature"
-                android:layout_alignBottom="@+id/gaugeTemperature"
-                android:text="0"
-                android:textSize="10dp"
-                android:textStyle="bold" />
-        </RelativeLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layoutPressure"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/layoutTemperature"
-        android:orientation="horizontal"
-        >
-        <TextView
-            android:id="@+id/titlePressure"
-            android:layout_width="match_parent"
-            android:layout_height="20dip"
-            android:ellipsize="marquee"
-            android:text="Pressure"
-            android:gravity="center_vertical"
-            android:layout_centerVertical="true"
-            android:textSize="15sp"
-            android:layout_weight="1"/>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-            <pl.pawelkleczkowski.customgauge.CustomGauge
-                android:id="@+id/gaugePressure"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:paddingBottom="5dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:paddingTop="5dp"
-                android:layout_centerInParent="true"
-                app:gaugePointStartColor="#ff0000"
-                app:gaugePointEndColor="#ff0000"
-                app:gaugePointSize="5"
-                app:gaugeStartAngle="180"
-                app:gaugeSweepAngle="180"
-                app:gaugeStrokeCap="BUTT"
-                app:gaugeStrokeColor="#206090"
-                app:gaugeStrokeWidth="7dp"
-                app:gaugeStartValue="800"
-                app:gaugeEndValue="1200"/>
-            <TextView
-                android:id="@+id/textViewPressure"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_alignLeft="@+id/gaugePressure"
-                android:layout_alignRight="@+id/gaugePressure"
-                android:layout_alignTop="@+id/gaugePressure"
-                android:layout_alignBottom="@+id/gaugePressure"
-                android:text="0"
-                android:textSize="10dp"
-                android:textStyle="bold" />
-        </RelativeLayout>
-
-    </LinearLayout>
+        android:layout_below="@+id/beaconTitle"
+        android:layout_alignParentStart="true"
+        android:id="@+id/textViewLastSeen"
+        android:textColor="#ffffff"
+        android:textSize="8sp" />
 
 
 </RelativeLayout>

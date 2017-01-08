@@ -1,5 +1,5 @@
 
-package fi.centria.ruuvitag;
+package fi.centria.ruuvitag.activity;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -25,6 +25,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import fi.centria.ruuvitag.R;
+import fi.centria.ruuvitag.data.DataSnapshot;
+import fi.centria.ruuvitag.data.RuuvitagDataEvent;
 import pl.pawelkleczkowski.customgauge.CustomGauge;
 
 /**
@@ -33,44 +36,13 @@ import pl.pawelkleczkowski.customgauge.CustomGauge;
 
 public class RuuviTagDataView extends LinearLayout {
 
-
-    int[] barColors = {
-            Color.rgb(93,138,168),
-            Color.rgb(227,38,54),
-            Color.rgb(255,191,0 ),
-            Color.rgb(164,198,57),
-            Color.rgb(205,149,117),
-            Color.rgb(0 ,128,0 ),
-            Color.rgb(0,255,255),
-            Color.rgb(127,255,212),
-            Color.rgb(75,83,32),
-            Color.rgb(233,214,107 ),
-            Color.rgb(178,190,181),
-            Color.rgb(165,42,420),
-            Color.rgb(253,238,0),
-            Color.rgb(0,127,255),
-            Color.rgb(132,132,130),
-            Color.rgb(255,225,53),
-            Color.rgb(0,0,0),
-            Color.rgb(254,111,94),
-            Color.rgb(135,50,96),
-            Color.rgb(181,166,66),
-            Color.rgb(102 ,255,0),
-            Color.rgb(0,66,37),
-            Color.rgb(205,127,50),
-            Color.rgb(165,42,42),
-            Color.rgb(204,85,0),
-            Color.rgb(0,204,153),
-    };
-
-
     public static final int TEMPERATURE = 1;
     public static final int HUMINIDITY = 2;
     public static final int PRESSURE = 3;
     public static final int RSSI = 4;
     private TextView mViewTitle;
 
-    public static  int KMaxX = 60*4;//60*12;
+    public static  int KMaxX = 60;//*4;
     public ArrayList<Date> xIndex = new ArrayList<Date>();
 
 
@@ -101,7 +73,7 @@ public class RuuviTagDataView extends LinearLayout {
     private void init()
     {
         inflate(getContext(), R.layout.view_ruuvitag_data, this);
-        mViewTitle = (TextView) findViewById(R.id.textViewTemperatureTitle);
+      mViewTitle = (TextView) findViewById(R.id.textViewTemperatureTitle);
         mGraph = (GraphView) findViewById(R.id.graph);
 
         mGraph.getViewport().setScrollable(false); // enables horizontal scrolling
@@ -111,13 +83,17 @@ public class RuuviTagDataView extends LinearLayout {
 
         allSeries = new HashMap<String,LineGraphSeries<DataPoint>>();
 
-
-
     }
 
 
     public void setType(int type)
     {
+        mGraph.getGridLabelRenderer().setVerticalLabelsColor(Color.BLACK);
+        mGraph.getGridLabelRenderer().setVerticalLabelsVisible(true);
+
+        mGraph.getGridLabelRenderer().setHorizontalLabelsVisible(true);
+        mGraph.getGridLabelRenderer().setHorizontalLabelsColor(Color.BLACK);
+
         this.type = type;
         StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(mGraph);
         switch (type)
@@ -131,12 +107,7 @@ public class RuuviTagDataView extends LinearLayout {
 
                 staticLabelsFormatter.setVerticalLabels(new String[] {"-40", "-20", "0", "20", "40"});
                 mGraph.getGridLabelRenderer().setNumVerticalLabels(1);
-                mGraph.getGridLabelRenderer().setVerticalLabelsColor(Color.BLACK);
-                mGraph.getGridLabelRenderer().setVerticalLabelsVisible(true);
 
-                mGraph.getGridLabelRenderer().setHorizontalLabelsVisible(true);
-                mGraph.getGridLabelRenderer().setHorizontalLabelsColor(Color.BLACK);
-                mGraph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
                 break;
             case HUMINIDITY:
                 mViewTitle.setText("Huminidity (%)");
@@ -147,12 +118,6 @@ public class RuuviTagDataView extends LinearLayout {
 
                 staticLabelsFormatter.setVerticalLabels(new String[] {"0", "100"});
                 mGraph.getGridLabelRenderer().setNumVerticalLabels(2);
-                mGraph.getGridLabelRenderer().setVerticalLabelsColor(Color.BLACK);
-                mGraph.getGridLabelRenderer().setVerticalLabelsVisible(true);
-
-                mGraph.getGridLabelRenderer().setHorizontalLabelsVisible(true);
-                mGraph.getGridLabelRenderer().setHorizontalLabelsColor(Color.BLACK);
-                mGraph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
 
                 break;
             case PRESSURE:
@@ -164,12 +129,6 @@ public class RuuviTagDataView extends LinearLayout {
 
                 staticLabelsFormatter.setVerticalLabels(new String[] {"990", "995", "1000", "1005", "1010"});
                 mGraph.getGridLabelRenderer().setNumVerticalLabels(1);
-                mGraph.getGridLabelRenderer().setVerticalLabelsColor(Color.BLACK);
-                mGraph.getGridLabelRenderer().setVerticalLabelsVisible(true);
-
-                mGraph.getGridLabelRenderer().setHorizontalLabelsVisible(true);
-                mGraph.getGridLabelRenderer().setHorizontalLabelsColor(Color.BLACK);
-                mGraph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
 
                 break;
             case RSSI:
@@ -181,26 +140,20 @@ public class RuuviTagDataView extends LinearLayout {
 
                 staticLabelsFormatter.setVerticalLabels(new String[] {"-100","-50", "0"});
                 mGraph.getGridLabelRenderer().setNumVerticalLabels(2);
-                mGraph.getGridLabelRenderer().setVerticalLabelsColor(Color.BLACK);
-                mGraph.getGridLabelRenderer().setVerticalLabelsVisible(true);
 
-                staticLabelsFormatter.setHorizontalLabels(new String[] {"-100","-50", "0"});
-                mGraph.getGridLabelRenderer().setNumHorizontalLabels(2);
-                mGraph.getGridLabelRenderer().setHorizontalLabelsVisible(true);
-                mGraph.getGridLabelRenderer().setHorizontalLabelsColor(Color.BLACK);
-
-                mGraph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
 
                 break;
             default:
                 break;
         }
+        mGraph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
     }
 
 
-    public void update(int time, LoggedEvent data)
+    public void update(Date time, DataSnapshot data)
     {
         double value =  0;
+
 
 
         for(int i = 0; i < data.objects.size(); i++)
@@ -208,16 +161,16 @@ public class RuuviTagDataView extends LinearLayout {
             switch (type)
             {
                 case TEMPERATURE:
-                    value = data.objects.get(i).temp;
+                    value = data.objects.get(i).getLastData().getTemperature();
                     break;
                 case HUMINIDITY:
-                    value = data.objects.get(i).humidity;
+                    value = data.objects.get(i).getLastData().getHuminidity();
                     break;
                 case PRESSURE:
-                    value = data.objects.get(i).air_pressure;
+                    value = data.objects.get(i).getLastData().getPressure();
                     break;
                 case RSSI:
-                    value = data.objects.get(i).rssi;
+                    value = data.objects.get(i).getLastData().getRssi();
                     break;
                 default:
                     break;
@@ -239,9 +192,9 @@ public class RuuviTagDataView extends LinearLayout {
                 allSeries.put(devId, dps);
                 allSeries.get(devId).appendData(new DataPoint(newX, value), false, KMaxX);
                 allSeries.get(devId).setThickness(2);
-                allSeries.get(devId).setColor(barColors[i]);
+                allSeries.get(devId).setColor(data.objects.get(i).getColor());
 
-                allSeries.get(devId).setTitle("" + data.objects.get(i).air_pressure);
+                allSeries.get(devId).setTitle("" + data.objects.get(i).getLastData().getPressure());
                 mGraph.addSeries(allSeries.get(devId));
             }
         }
@@ -251,7 +204,7 @@ public class RuuviTagDataView extends LinearLayout {
 
         newX++;
 
-        xIndex.add(data.dateTime);
+        xIndex.add(time);
 
 
         mGraph.getViewport().setXAxisBoundsManual(true);
@@ -273,16 +226,15 @@ public class RuuviTagDataView extends LinearLayout {
         mGraph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
             @Override
             public String formatLabel(double value, boolean isValueX) {
-                if (isValueX) {
-                    Date lastest = xIndex.get(0);
+                if (isValueX)
+                {
 
-               //     if(newX > KMaxX)
-                 //       lastest = xIndex.get(newX);
+                    Date xValue = xIndex.get(0);
 
                     Calendar c = new GregorianCalendar();
-                    c.setTime(lastest);
+                    c.setTime(xValue);
 
-                    c.add(Calendar.MINUTE, (int) value); // adds one hour
+                    c.add(Calendar.MILLISECOND, RuuvitagScannerActivity.RUN_INTERVAL_MS); // adds one hour
 
                     DateFormat formatter = new SimpleDateFormat("HH:mm");
                     String dateFormatted = formatter.format(c.getTime());
@@ -306,7 +258,7 @@ public class RuuviTagDataView extends LinearLayout {
                 mViewTitle.setText( dateFormatted + " - Temperature (C);");
                 break;
             case HUMINIDITY:
-                mViewTitle.setText( dateFormatted + " - HUMINIDITY (%);");
+                mViewTitle.setText( dateFormatted + " - Huminidity (%);");
                 break;
             case PRESSURE:
                 mViewTitle.setText( dateFormatted + " - Air Pressure (hPA);");

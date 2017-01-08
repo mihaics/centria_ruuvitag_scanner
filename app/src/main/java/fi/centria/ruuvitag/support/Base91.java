@@ -1,4 +1,4 @@
-package fi.centria.ruuvitag;
+package fi.centria.ruuvitag.support;
 
 import java.io.ByteArrayOutputStream;
 
