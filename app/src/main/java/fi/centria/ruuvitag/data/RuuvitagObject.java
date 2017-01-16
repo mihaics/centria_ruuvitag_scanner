@@ -7,10 +7,6 @@ import com.jjoe64.graphview.series.Series;
 
 import java.util.ArrayList;
 
-/**
- * Created by ISOHAJA on 4.1.2017.
- */
-
 public class RuuvitagObject
 {
 

@@ -3,21 +3,21 @@ package fi.centria.ruuvitag.activity;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.util.Pair;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
@@ -25,7 +25,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.altbeacon.beacon.Beacon;
@@ -38,14 +37,11 @@ import org.altbeacon.beacon.Region;
 import org.altbeacon.beacon.powersave.BackgroundPowerSaver;
 import org.altbeacon.beacon.utils.UrlBeaconUrlCompressor;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -56,21 +52,26 @@ import fi.centria.ruuvitag.data.RuuvitagDataEvent;
 import fi.centria.ruuvitag.data.RuuvitagObject;
 import fi.centria.ruuvitag.networking.DweetIoConnector;
 
+import fi.centria.ruuvitag.networking.HttpResponseHandler;
 import fi.centria.ruuvitag.support.ColorsGenerator;
-import pl.pawelkleczkowski.customgauge.CustomGauge;
 
 public class RuuvitagScannerActivity extends Activity implements BeaconConsumer
 {
+    private static final String KBEACON_URL_TO_LOOK_FOR = "https://ruu.vi";
     private BeaconsListAdapter beaconsAdapter;
     private Intent myServiceIntent;
 
-    public static final int RUN_INTERVAL_MS = 1000;
+    public static final int RUN_INTERVAL_MS = 10*1000; // THIS IS THE INTERVAL FOR LOGGER TO RUN
     private Handler mHandler = new Handler();
     private Timer mTimer = null;
     ArrayList<Pair<Date,DataSnapshot>> historicalData;
+
     private RuuviTagDataView huminidityGraphView;
     private RuuviTagDataView pressureGraphView;
     private RuuviTagDataView temperatureGraphView;
+    private HttpResponseHandler connectionHandler;
+
+    private Region region;
 
     class TimeDisplayTimerTask extends TimerTask {
 
@@ -87,12 +88,18 @@ public class RuuvitagScannerActivity extends Activity implements BeaconConsumer
 
                     DataSnapshot snapShot = new DataSnapshot();
                     snapShot.objects = beaconsInRange;
+                    snapShot.time = System.currentTimeMillis();
 
                     historicalData.add(new Pair<Date, DataSnapshot>(now,snapShot));
 
                     huminidityGraphView.update(now,snapShot);
                     pressureGraphView.update(now,snapShot);
                     temperatureGraphView.update(now,snapShot);
+
+                    if(historicalData.size() > 2)
+                        findViewById(R.id.showLogsbutton).setVisibility(View.VISIBLE);
+                    else
+                        findViewById(R.id.showLogsbutton).setVisibility(View.GONE);
 
                 }
 
@@ -159,20 +166,34 @@ public class RuuvitagScannerActivity extends Activity implements BeaconConsumer
     @Override
     protected void onPause()
     {
-
-
         if(!useBackgroundScan)
         {
+            ((Button)findViewById(R.id.showLogsbutton)).setText(getResources().getText(R.string.show_logs_button_title));
+            grahpViewsContainer.setVisibility(View.GONE);
+
             backgroundPowerSaver = null;
-            beaconManager.unbind(this);
-            beaconManager = null;
-            if (mTimer != null)
+            if(beaconManager != null)
+            {
+                try
+                {
+                    if (region != null)
+                        beaconManager.stopRangingBeaconsInRegion(region);
+
+                }catch(Exception e){}
+
+                beaconManager.removeAllRangeNotifiers();
+                beaconManager.unbind(this);
+                beaconManager = null;
+            }
+                if (mTimer != null)
             {
                 mTimer.cancel();
                 mTimer = null;
             }
             clearHistoryData();
         }
+        else if(state == SCAN_STATE_STARTED)
+            beaconManager.setBackgroundMode(true);
 
         super.onPause();
     }
@@ -188,6 +209,8 @@ public class RuuvitagScannerActivity extends Activity implements BeaconConsumer
         setContentView(R.layout.activity_scanner);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        connectionHandler = new HttpResponseHandler();
 
         historicalData = new   ArrayList<Pair<Date,DataSnapshot>>();
 
@@ -206,7 +229,6 @@ public class RuuvitagScannerActivity extends Activity implements BeaconConsumer
         {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
             {
-                disableScanning();
 
                 if (isChecked)
                 {
@@ -215,7 +237,6 @@ public class RuuvitagScannerActivity extends Activity implements BeaconConsumer
                 {
                     useBackgroundScan = false;
                 }
-                initScanning();
             }
         });
 
@@ -228,7 +249,17 @@ public class RuuvitagScannerActivity extends Activity implements BeaconConsumer
 
         createGraphViews();
 
+        findViewById(R.id.showLogsbutton).setVisibility(View.GONE);
 
+
+        beaconsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,int position, long id)
+            {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(beaconsInRange.get(position).getUrl()));
+                startActivity(browserIntent);
+            }
+        });
     }
 
     private void createGraphViews()
@@ -236,9 +267,10 @@ public class RuuvitagScannerActivity extends Activity implements BeaconConsumer
         grahpViewsContainer = (ScrollView) this.findViewById(R.id.grapViewsLayout);
 
         LinearLayout ll = new LinearLayout(this);
+        ll.setOrientation(LinearLayout.VERTICAL);
         ll.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         huminidityGraphView = new RuuviTagDataView(this);
-        huminidityGraphView.setType(RuuviTagDataView.HUMINIDITY);
+        huminidityGraphView.setType(RuuviTagDataView.HUMIDITY);
         ll.addView(huminidityGraphView);
 
         temperatureGraphView = new RuuviTagDataView(this);
@@ -249,23 +281,33 @@ public class RuuvitagScannerActivity extends Activity implements BeaconConsumer
         pressureGraphView.setType(RuuviTagDataView.PRESSURE);
         ll.addView(pressureGraphView);
 
-        Button closeButton = new Button(this);
-        ll.addView(closeButton);
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                grahpViewsContainer.setVisibility(View.GONE);
-            }
-        });
+
+        grahpViewsContainer.addView(ll);
+
 
     }
 
     public void onClickshowGraphs(View view) {
 
-        grahpViewsContainer.setVisibility(View.VISIBLE);
+        Button v = (Button) view;
+        if(grahpViewsContainer.getVisibility() == View.GONE)
+        {
+            v.setText(getText(R.string.close));
+            grahpViewsContainer.setVisibility(View.VISIBLE);
+            grahpViewsContainer.bringToFront();
+        }
+        else
+        {
+            v.setText(getText(R.string.show_logs_button_title));
+            grahpViewsContainer.setVisibility(View.GONE);
+
+        }
+
+
     }
 
-    public void onClickScanButton(View view) {
+    public void onClickScanButton(View view)
+    {
         if (state == SCAN_STATE_STARTED)
             disableScanning();
         else
@@ -290,7 +332,7 @@ public class RuuvitagScannerActivity extends Activity implements BeaconConsumer
     private void disableScanning()
     {
         state = SCAN_STATE_STOPPED;
-        scanButton.setText("START SCANNING");
+        scanButton.setText(getText(R.string.start_scanning));
         progressBarScanning.setVisibility(View.GONE);
 
 
@@ -298,6 +340,12 @@ public class RuuvitagScannerActivity extends Activity implements BeaconConsumer
 
         if(beaconManager != null)
         {
+            try {
+                if (region != null)
+                    beaconManager.stopRangingBeaconsInRegion(region);
+            }catch(Exception e){}
+
+            beaconManager.removeAllRangeNotifiers();
             beaconManager.unbind(this);
             beaconManager = null;
         }
@@ -313,10 +361,10 @@ public class RuuvitagScannerActivity extends Activity implements BeaconConsumer
     {
         if(!scanPermissionOK)
         {
-            Toast.makeText(this,"No permission to scan BLE devices",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,getText(R.string.no_permission_to_scan_beacons),Toast.LENGTH_SHORT).show();
         }
         state = SCAN_STATE_STARTED;
-        scanButton.setText("STOP SCANNING");
+        scanButton.setText(getText(R.string.stop_scanning));
         progressBarScanning.setVisibility(View.VISIBLE);
 
 
@@ -352,11 +400,14 @@ public class RuuvitagScannerActivity extends Activity implements BeaconConsumer
         }
         scanPermissionOK = true;
 
-        if(state == SCAN_STATE_STARTED)
+        if(state == SCAN_STATE_STARTED && !useBackgroundScan)
         {
-             mTimer = new Timer();
+            mTimer = new Timer();
             mTimer.scheduleAtFixedRate(new TimeDisplayTimerTask(), 0, RUN_INTERVAL_MS);
+            initScanning();
         }
+        if(beaconManager != null)
+            beaconManager.setBackgroundMode(false);
     }
 
     @Override
@@ -369,32 +420,15 @@ public class RuuvitagScannerActivity extends Activity implements BeaconConsumer
             @Override
             public void didRangeBeaconsInRegion(Collection<Beacon> collection, Region region)
             {
-                long now = System.currentTimeMillis();
-
                 for (Beacon beacon: collection)
                 {
-                    RuuvitagObject existingObject = null;
-
                     if (beacon.getServiceUuid() == 0xfeaa && beacon.getBeaconTypeCode() == 0x10)
                     {
-
-
                         String url = UrlBeaconUrlCompressor.uncompress(beacon.getId1().toByteArray());
-
-                        if(url.startsWith("https://ruu.vi"))
+                          if(url.startsWith(KBEACON_URL_TO_LOOK_FOR))
                         {
-                            processRuuviTag(url,beacon,now,existingObject);
+                            processRuuviTag(url,beacon);
                         }
-                    }
-                }
-
-                for (Iterator<RuuvitagObject> iterator = beaconsInRange.iterator(); iterator.hasNext(); )
-                {
-                    RuuvitagObject po = iterator.next();
-                    if(now - po.getLastSeen() > 20 * 1000) //REMOVE SENSOR IF NOT SEEN IN 20s.
-                    {
-                        iterator.remove();
-                        return;
                     }
                 }
             }
@@ -403,25 +437,19 @@ public class RuuvitagScannerActivity extends Activity implements BeaconConsumer
 
         ArrayList<Identifier> identifiers = new ArrayList<Identifier>();
         identifiers.add(null);
-        Region region = new Region("RuuvitagRegion", identifiers);
+        Random r = new Random();
+        region = new Region("RuuvitagRegion_"+r.nextInt(1000), identifiers);
 
         beaconManager.setForegroundBetweenScanPeriod(10000);
-        beaconManager.setForegroundScanPeriod(5000);
+        beaconManager.setForegroundScanPeriod(1100l);
 
-        if(useBackgroundScan)
-        {
-            beaconManager.setBackgroundBetweenScanPeriod(60000);
-            beaconManager.setBackgroundMode(true);
-            beaconManager.setBackgroundScanPeriod(5000);
-        }
-        else
-        {
+            beaconManager.setBackgroundBetweenScanPeriod(50000);
 
-            beaconManager.setBackgroundMode(false);
+            beaconManager.setBackgroundScanPeriod(1100l);
 
-        }
         try
         {
+            beaconManager.updateScanPeriods();
             beaconManager.startRangingBeaconsInRegion(region);
             state = SCAN_STATE_STARTED;
             scanningEnabled();
@@ -434,14 +462,17 @@ public class RuuvitagScannerActivity extends Activity implements BeaconConsumer
 
     }
 
-    private void processRuuviTag(String url, Beacon beacon, long now, RuuvitagObject existingObject)
+    private void processRuuviTag(String url, Beacon beacon)
     {
+        RuuvitagObject existingObject = null;
+        long now = System.currentTimeMillis();
         for (RuuvitagObject o: beaconsInRange)
         {
             if(o.getId().equalsIgnoreCase(beacon.getBluetoothAddress()))
             {
                 o.setLastSeen(now);
                 existingObject = o;
+                break;
             }
         }
 
@@ -468,12 +499,12 @@ public class RuuvitagScannerActivity extends Activity implements BeaconConsumer
         }
         catch (Exception e)
         {
-
+            e.printStackTrace();
         }
         existingObject.addData(dataEvent);
 
         DweetIoConnector dweetIoConnector = new DweetIoConnector();
-        dweetIoConnector.postData(existingObject,getBaseContext());
+        dweetIoConnector.postData(existingObject,getBaseContext(),connectionHandler);
 
 
         runOnUiThread(new Runnable()

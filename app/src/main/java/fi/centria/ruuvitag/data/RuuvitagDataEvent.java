@@ -4,9 +4,6 @@ import android.util.Base64;
 
 import fi.centria.ruuvitag.support.Base91;
 
-/**
- * Created by ISOHAJA on 4.1.2017.
- */
 
 public class RuuvitagDataEvent
 {
@@ -15,6 +12,9 @@ public class RuuvitagDataEvent
     private double air_pressure;
     double time_elapsed;
 
+    /* TODO get these from device GPS*/
+    double latitude = 0.0;
+    double longitude = 0.0;
 
 
     private double rssi;
@@ -53,7 +53,8 @@ public class RuuvitagDataEvent
             int pData[] = new int[8];
             for (int i = 0; i < bData.length; i++)
                 pData[i] = bData[i] & 0xFF;
-//bdata must start 2
+
+            //bdata[0] must be 2?
             parseByteData(pData,2);
         }
         catch(Exception e)

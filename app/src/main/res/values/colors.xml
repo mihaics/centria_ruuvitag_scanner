@@ -3,4 +3,12 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="graphPrimaryColor">#505050</color>
+    <color name="main_view_background">#202020</color>
+<color name="colorButtonBackground">#ffffff</color>
+<color name="gauge_background">#404040</color>
+    <color name="gauge_stroke">#AAAAAA</color>
+    <color name="gauge_title_color">#ffffff</color>
+    <color name="white">#ffffff</color>
 </resources>

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#404040"
+    android:background="@color/gauge_background"
     android:padding="10dp">
 
 
@@ -23,7 +23,7 @@
         app:gaugeStartAngle="100"
         app:gaugeSweepAngle="330"
         app:gaugeStrokeCap="BUTT"
-        app:gaugeStrokeColor="#AAAAAA"
+        app:gaugeStrokeColor="@color/gauge_stroke"
         app:gaugeStrokeWidth="7dp"
         app:gaugeStartValue="-150"
         app:gaugeEndValue="0"/>
@@ -76,7 +76,7 @@
                     app:gaugeStartAngle="110"
                     app:gaugeSweepAngle="300"
                     app:gaugeStrokeCap="BUTT"
-                    app:gaugeStrokeColor="#202020"
+                    app:gaugeStrokeColor="@color/gauge_stroke"
                     app:gaugeStrokeWidth="7dp"
                     app:gaugeStartValue="800"
                     app:gaugeEndValue="1200"/>
@@ -98,13 +98,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="20dip"
                 android:ellipsize="marquee"
-                android:text="Pressure"
+                android:text="@string/air_pressure_graph_title"
                 android:gravity="center_vertical"
                 android:layout_centerVertical="true"
                 android:textSize="10sp"
                 android:layout_weight="1"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:textColor="#ffffff" />
+                android:textColor="@color/gauge_title_color" />
         </LinearLayout>
 
         <LinearLayout
@@ -135,7 +135,7 @@
                     app:gaugeStartAngle="120"
                     app:gaugeSweepAngle="300"
                     app:gaugeStrokeCap="BUTT"
-                    app:gaugeStrokeColor="#202020"
+                    app:gaugeStrokeColor="@color/gauge_stroke"
                     app:gaugeStrokeWidth="7dp"
                     app:gaugeStartValue="-40"
                     app:gaugeEndValue="40"/>
@@ -157,13 +157,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="20dip"
                 android:ellipsize="marquee"
-                android:text="Temperature"
+                android:text="@string/temperature_graph_title"
                 android:gravity="center_vertical"
                 android:layout_centerVertical="true"
                 android:textSize="10sp"
                 android:layout_weight="1"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:textColor="#ffffff" />
+                android:textColor="@color/gauge_title_color" />
         </LinearLayout>
 
         <LinearLayout
@@ -194,7 +194,7 @@
                     app:gaugeStartAngle="120"
                     app:gaugeSweepAngle="300"
                     app:gaugeStrokeCap="BUTT"
-                    app:gaugeStrokeColor="#202020"
+                    app:gaugeStrokeColor="@color/gauge_stroke"
                     app:gaugeStrokeWidth="7dp"
                     app:gaugeStartValue="0"
                     app:gaugeEndValue="100"/>
@@ -216,13 +216,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="20dip"
                 android:ellipsize="marquee"
-                android:text="Huminidity"
+                android:text="@string/humidity_graph_title"
                 android:gravity="center_vertical"
                 android:layout_centerVertical="true"
                 android:textSize="10sp"
                 android:layout_weight="1"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:textColor="#ffffff" />
+                android:textColor="@color/gauge_title_color" />
 
         </LinearLayout>
     </LinearLayout>
@@ -245,7 +245,7 @@
         android:layout_below="@+id/beaconTitle"
         android:layout_alignParentStart="true"
         android:id="@+id/textViewLastSeen"
-        android:textColor="#ffffff"
+        android:textColor="@color/white"
         android:textSize="8sp" />
 
 

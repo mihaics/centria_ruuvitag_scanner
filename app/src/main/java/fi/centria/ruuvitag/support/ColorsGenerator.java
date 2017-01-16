@@ -4,10 +4,6 @@ import android.graphics.Color;
 
 import java.util.Random;
 
-/**
- * Created by ISOHAJA on 4.1.2017.
- */
-
 public class ColorsGenerator
 {
 

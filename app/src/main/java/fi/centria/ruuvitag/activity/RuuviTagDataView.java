@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LegendRenderer;
-import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -22,31 +21,18 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import fi.centria.ruuvitag.R;
 import fi.centria.ruuvitag.data.DataSnapshot;
-import fi.centria.ruuvitag.data.RuuvitagDataEvent;
-import pl.pawelkleczkowski.customgauge.CustomGauge;
-
-/**
- * Created by admin on 09/12/16.
- */
-
 public class RuuviTagDataView extends LinearLayout {
 
     public static final int TEMPERATURE = 1;
-    public static final int HUMINIDITY = 2;
+    public static final int HUMIDITY = 2;
     public static final int PRESSURE = 3;
-    public static final int RSSI = 4;
     private TextView mViewTitle;
 
-    public static  int KMaxX = 60;//*4;
+    public static  int KMaxX = 60*2; //THIS IS THE MAX LOGGING WINDOW SIZE IN MINUTES
     public ArrayList<Date> xIndex = new ArrayList<Date>();
-
-
-    private LineGraphSeries<DataPoint> mSeries1;
 
     HashMap<String,LineGraphSeries<DataPoint>> allSeries;
 
@@ -54,8 +40,20 @@ public class RuuviTagDataView extends LinearLayout {
     private GraphView mGraph;
     private int newX = 0;
 
+    String temperatureLabels[] = new String[] {"-40", "-20", "0", "20", "40"};
+    static int KMinTemperature = -40;
+    static int KMaxTemperature = 40;
 
-    public RuuviTagDataView(Context context) {
+    String humidityLabels[] = new String[] {"0", "100"};
+    static int KMinHumidity = 0;
+    static int KMaxHumidity = 100;
+
+    String airPressureLabels[] = new String[] {"990", "995", "1000", "1005", "1010"};
+    static int KMinAirPressure = 990;
+    static int KMaxAirPressure = 1010;
+
+    public RuuviTagDataView(Context context)
+    {
         super(context);
         init();
     }
@@ -76,10 +74,10 @@ public class RuuviTagDataView extends LinearLayout {
       mViewTitle = (TextView) findViewById(R.id.textViewTemperatureTitle);
         mGraph = (GraphView) findViewById(R.id.graph);
 
-        mGraph.getViewport().setScrollable(false); // enables horizontal scrolling
-        mGraph.getViewport().setScrollableY(false); // enables vertical scrolling
-        mGraph.getViewport().setScalable(false); // enables horizontal zooming and scrolling
-        mGraph.getViewport().setScalableY(false); // enables vertical zooming and scrolling
+        mGraph.getViewport().setScrollable(false);
+        mGraph.getViewport().setScrollableY(false);
+        mGraph.getViewport().setScalable(false);
+        mGraph.getViewport().setScalableY(false);
 
         allSeries = new HashMap<String,LineGraphSeries<DataPoint>>();
 
@@ -88,59 +86,53 @@ public class RuuviTagDataView extends LinearLayout {
 
     public void setType(int type)
     {
-        mGraph.getGridLabelRenderer().setVerticalLabelsColor(Color.BLACK);
+        mGraph.setTitleColor(Color.WHITE);
+        mViewTitle.setTextColor(getResources().getColor(R.color.graphPrimaryColor));
+        mGraph.getGridLabelRenderer().setGridColor(getResources().getColor(R.color.graphPrimaryColor));
+        mGraph.getGridLabelRenderer().setHorizontalLabelsColor(getResources().getColor(R.color.graphPrimaryColor));
+        mGraph.getGridLabelRenderer().setVerticalLabelsColor(getResources().getColor(R.color.graphPrimaryColor));
+        mGraph.getGridLabelRenderer().setHorizontalAxisTitleColor(getResources().getColor(R.color.graphPrimaryColor));
+        mGraph.getGridLabelRenderer().setVerticalAxisTitleColor(getResources().getColor(R.color.graphPrimaryColor));
+
         mGraph.getGridLabelRenderer().setVerticalLabelsVisible(true);
 
         mGraph.getGridLabelRenderer().setHorizontalLabelsVisible(true);
-        mGraph.getGridLabelRenderer().setHorizontalLabelsColor(Color.BLACK);
+
 
         this.type = type;
         StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(mGraph);
         switch (type)
         {
             case TEMPERATURE:
-                mViewTitle.setText("Temperature (C)");
+                mViewTitle.setText(getResources().getText(R.string.temperature_graph_title));
 
                 mGraph.getViewport().setYAxisBoundsManual(true);
-                mGraph.getViewport().setMinY(-40);
-                mGraph.getViewport().setMaxY(40);
-
-                staticLabelsFormatter.setVerticalLabels(new String[] {"-40", "-20", "0", "20", "40"});
+                mGraph.getViewport().setMinY(KMinTemperature);
+                mGraph.getViewport().setMaxY(KMaxTemperature);
+                staticLabelsFormatter.setVerticalLabels(temperatureLabels);
                 mGraph.getGridLabelRenderer().setNumVerticalLabels(1);
 
                 break;
-            case HUMINIDITY:
-                mViewTitle.setText("Huminidity (%)");
+            case HUMIDITY:
+                mViewTitle.setText(getResources().getText(R.string.humidity_graph_title));
 
                 mGraph.getViewport().setYAxisBoundsManual(true);
-                mGraph.getViewport().setMinY(0);
-                mGraph.getViewport().setMaxY(100);
+                mGraph.getViewport().setMinY(KMinHumidity);
+                mGraph.getViewport().setMaxY(KMaxHumidity);
 
-                staticLabelsFormatter.setVerticalLabels(new String[] {"0", "100"});
+                staticLabelsFormatter.setVerticalLabels(humidityLabels);
                 mGraph.getGridLabelRenderer().setNumVerticalLabels(2);
 
                 break;
             case PRESSURE:
-                mViewTitle.setText("Air Pressure (hPA)");
+                mViewTitle.setText(getResources().getText(R.string.air_pressure_graph_title));
 
                 mGraph.getViewport().setYAxisBoundsManual(true);
-                mGraph.getViewport().setMinY(950);
-                mGraph.getViewport().setMaxY(1050);
+                mGraph.getViewport().setMinY(KMinAirPressure);
+                mGraph.getViewport().setMaxY(KMaxAirPressure);
 
-                staticLabelsFormatter.setVerticalLabels(new String[] {"990", "995", "1000", "1005", "1010"});
+                staticLabelsFormatter.setVerticalLabels(airPressureLabels);
                 mGraph.getGridLabelRenderer().setNumVerticalLabels(1);
-
-                break;
-            case RSSI:
-                mViewTitle.setText("RSSI (dbA)");
-
-                mGraph.getViewport().setYAxisBoundsManual(true);
-                mGraph.getViewport().setMinY(-100);
-                mGraph.getViewport().setMaxY(0);
-
-                staticLabelsFormatter.setVerticalLabels(new String[] {"-100","-50", "0"});
-                mGraph.getGridLabelRenderer().setNumVerticalLabels(2);
-
 
                 break;
             default:
@@ -163,16 +155,13 @@ public class RuuviTagDataView extends LinearLayout {
                 case TEMPERATURE:
                     value = data.objects.get(i).getLastData().getTemperature();
                     break;
-                case HUMINIDITY:
+                case HUMIDITY:
                     value = data.objects.get(i).getLastData().getHuminidity();
                     break;
                 case PRESSURE:
                     value = data.objects.get(i).getLastData().getPressure();
                     break;
-                case RSSI:
-                    value = data.objects.get(i).getLastData().getRssi();
-                    break;
-                default:
+                 default:
                     break;
             }
 
@@ -208,7 +197,7 @@ public class RuuviTagDataView extends LinearLayout {
 
 
         mGraph.getViewport().setXAxisBoundsManual(true);
-        mGraph.getGridLabelRenderer().setHorizontalLabelsAngle(45);
+        mGraph.getGridLabelRenderer().setHorizontalLabelsAngle(20);
         StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(mGraph);
 
         if(newX < KMaxX)
@@ -223,6 +212,7 @@ public class RuuviTagDataView extends LinearLayout {
             mGraph.getViewport().setMaxX(newX);
         }
 
+        mGraph.getGridLabelRenderer().setNumHorizontalLabels(4);
         mGraph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
             @Override
             public String formatLabel(double value, boolean isValueX) {
@@ -234,16 +224,16 @@ public class RuuviTagDataView extends LinearLayout {
                     Calendar c = new GregorianCalendar();
                     c.setTime(xValue);
 
-                    c.add(Calendar.MILLISECOND, RuuvitagScannerActivity.RUN_INTERVAL_MS); // adds one hour
+                    c.add(Calendar.MILLISECOND, ((int)value)*RuuvitagScannerActivity.RUN_INTERVAL_MS); // adds one hour
 
                     DateFormat formatter = new SimpleDateFormat("HH:mm");
                     String dateFormatted = formatter.format(c.getTime());
 
 
-                    return dateFormatted;//super.formatLabel(value, isValueX);
+                    return dateFormatted;
                 } else {
-                    // show currency for y values
-                    return "" + (int) value;//super.formatLabel(value, isValueX);
+
+                    return "" + (int) value;
                 }
             }
         });
@@ -255,16 +245,13 @@ public class RuuviTagDataView extends LinearLayout {
         switch (type)
         {
             case TEMPERATURE:
-                mViewTitle.setText( dateFormatted + " - Temperature (C);");
+                mViewTitle.setText( dateFormatted + " - " + getResources().getString(R.string.temperature_graph_title));
                 break;
-            case HUMINIDITY:
-                mViewTitle.setText( dateFormatted + " - Huminidity (%);");
+            case HUMIDITY:
+                mViewTitle.setText( dateFormatted + " - " + getResources().getString(R.string.temperature_graph_title));
                 break;
             case PRESSURE:
-                mViewTitle.setText( dateFormatted + " - Air Pressure (hPA);");
-                break;
-            case RSSI:
-                mViewTitle.setText( dateFormatted + " - Air Pressure (dba);");
+                mViewTitle.setText( dateFormatted + " - " + getResources().getString(R.string.temperature_graph_title));
                 break;
             default:
                 break;
@@ -277,6 +264,8 @@ public class RuuviTagDataView extends LinearLayout {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
     {
+        /*IMPROVE THIS WORK LANDSCAPE SCREEN AND TABLETS*/
+
         int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
         int parentHeight = MeasureSpec.getSize(heightMeasureSpec);
         this.setMeasuredDimension(parentWidth, (int) (parentWidth*(4.00/3.00)));

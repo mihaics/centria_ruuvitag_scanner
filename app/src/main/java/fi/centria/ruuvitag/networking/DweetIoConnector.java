@@ -1,6 +1,7 @@
 package fi.centria.ruuvitag.networking;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -22,30 +23,23 @@ import java.io.UnsupportedEncodingException;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.ByteArrayEntity;
+import cz.msebera.android.httpclient.entity.StringEntity;
 import fi.centria.ruuvitag.data.RuuvitagObject;
 
 public class DweetIoConnector
 {
     static RequestQueue requestQueue = null;
-    public void postData(RuuvitagObject ruuvitagObject, Context context)
+    public void postData(RuuvitagObject ruuvitagObject, Context context, AsyncHttpResponseHandler handler)
     {
 
         String URL = "https://dweet.io/dweet/for/"+ruuvitagObject.getId();
-        AsyncHttpClient client = new AsyncHttpClient();
-        String someData;
-        ByteArrayEntity be = new ByteArrayEntity(ruuvitagObject.getLastDataJSON().getBytes());
-        client.post(context, URL, be, "application/json", new AsyncHttpResponseHandler() {
+         AsyncHttpClient client = new AsyncHttpClient();
 
+        try {
+            StringEntity entity = new StringEntity(ruuvitagObject.getLastDataJSON());
 
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
-            }
-        });
+            ByteArrayEntity be = new ByteArrayEntity(ruuvitagObject.getLastDataJSON().getBytes());
+            client.post(context, URL, be, "application/json", handler);
+        }catch (Exception e){}
     }
 }
