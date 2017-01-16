@@ -40,17 +40,17 @@ public class RuuviTagDataView extends LinearLayout {
     private GraphView mGraph;
     private int newX = 0;
 
-    String temperatureLabels[] = new String[] {"-40", "-20", "0", "20", "40"};
-    static int KMinTemperature = -40;
-    static int KMaxTemperature = 40;
+    String temperatureLabels[] = new String[] {"-30", "-15", "0", "30", "60"};
+    static int KMinTemperature = -30;
+    static int KMaxTemperature = 60;
 
     String humidityLabels[] = new String[] {"0", "100"};
     static int KMinHumidity = 0;
     static int KMaxHumidity = 100;
 
-    String airPressureLabels[] = new String[] {"990", "995", "1000", "1005", "1010"};
-    static int KMinAirPressure = 990;
-    static int KMaxAirPressure = 1010;
+    String airPressureLabels[] = new String[] {"950", "975", "1000", "1025", "1050"};
+    static int KMinAirPressure = 900;
+    static int KMaxAirPressure = 1100;
 
     public RuuviTagDataView(Context context)
     {
@@ -248,10 +248,10 @@ public class RuuviTagDataView extends LinearLayout {
                 mViewTitle.setText( dateFormatted + " - " + getResources().getString(R.string.temperature_graph_title));
                 break;
             case HUMIDITY:
-                mViewTitle.setText( dateFormatted + " - " + getResources().getString(R.string.temperature_graph_title));
+                mViewTitle.setText( dateFormatted + " - " + getResources().getString(R.string.humidity_graph_title));
                 break;
             case PRESSURE:
-                mViewTitle.setText( dateFormatted + " - " + getResources().getString(R.string.temperature_graph_title));
+                mViewTitle.setText( dateFormatted + " - " + getResources().getString(R.string.air_pressure_graph_title));
                 break;
             default:
                 break;
