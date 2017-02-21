@@ -71,26 +71,53 @@
 
     </LinearLayout>
 
+
     <Button
         android:text="SHOW LOGS"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/showLogsbutton"
+        android:id="@id/showLogsbutton"
         android:onClick="onClickshowGraphs"
-        android:layout_weight="1"
-        android:elevation="0dp" />
+        android:elevation="0dp"
+
+        android:layout_above="@+id/textViewDeviceId"
+        android:layout_alignParentLeft="true" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:id="@id/textViewDeviceId"
+        android:textSize="10sp"
+        android:textColor="#ffffff" />
 
     <ScrollView
         android:id="@+id/grapViewsLayout"
         android:orientation="vertical"
         android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_above="@+id/showLogsbutton"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/main_view_background"
+        android:visibility="gone">
+    </ScrollView>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/SingleTagViewLayout"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
         android:layout_above="@id/showLogsbutton"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/main_view_background"
         android:visibility="gone">
+    </android.support.v4.view.ViewPager>
 
-    </ScrollView>
+
+
+
 
 </RelativeLayout>

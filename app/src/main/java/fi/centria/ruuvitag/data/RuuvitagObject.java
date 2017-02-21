@@ -16,6 +16,9 @@ public class RuuvitagObject
     private int color;
     private String url;
     private RuuvitagDataEvent lastData;
+    private String deviceId;
+    private double latitude;
+    private double longitude;
 
     public RuuvitagObject(){
 
@@ -57,6 +60,8 @@ public class RuuvitagObject
         tempObject.setId(this.getId());
         tempObject.setLastSeen(this.getLastSeen());
         tempObject.addData(lastData);
+        tempObject.setDeviceId(this.getDeviceId());
+        tempObject.setLocation(this.latitude,this.longitude);
 
 
         return new Gson().toJson(tempObject);
@@ -78,5 +83,19 @@ public class RuuvitagObject
 
     public String getUrl() {
         return url;
+    }
+
+    public void setLocation(double latitude, double longitude) {
+
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
     }
 }

@@ -106,9 +106,9 @@ public class RuuviTagDataView extends LinearLayout {
             case TEMPERATURE:
                 mViewTitle.setText(getResources().getText(R.string.temperature_graph_title));
 
-                mGraph.getViewport().setYAxisBoundsManual(true);
-                mGraph.getViewport().setMinY(KMinTemperature);
-                mGraph.getViewport().setMaxY(KMaxTemperature);
+               // mGraph.getViewport().setYAxisBoundsManual(true);
+                //mGraph.getViewport().setMinY(KMinTemperature);
+                //mGraph.getViewport().setMaxY(KMaxTemperature);
                 staticLabelsFormatter.setVerticalLabels(temperatureLabels);
                 mGraph.getGridLabelRenderer().setNumVerticalLabels(1);
 
@@ -116,9 +116,9 @@ public class RuuviTagDataView extends LinearLayout {
             case HUMIDITY:
                 mViewTitle.setText(getResources().getText(R.string.humidity_graph_title));
 
-                mGraph.getViewport().setYAxisBoundsManual(true);
-                mGraph.getViewport().setMinY(KMinHumidity);
-                mGraph.getViewport().setMaxY(KMaxHumidity);
+              //  mGraph.getViewport().setYAxisBoundsManual(true);
+               // mGraph.getViewport().setMinY(KMinHumidity);
+               // mGraph.getViewport().setMaxY(KMaxHumidity);
 
                 staticLabelsFormatter.setVerticalLabels(humidityLabels);
                 mGraph.getGridLabelRenderer().setNumVerticalLabels(2);
@@ -127,9 +127,9 @@ public class RuuviTagDataView extends LinearLayout {
             case PRESSURE:
                 mViewTitle.setText(getResources().getText(R.string.air_pressure_graph_title));
 
-                mGraph.getViewport().setYAxisBoundsManual(true);
-                mGraph.getViewport().setMinY(KMinAirPressure);
-                mGraph.getViewport().setMaxY(KMaxAirPressure);
+             //   mGraph.getViewport().setYAxisBoundsManual(true);
+             //   mGraph.getViewport().setMinY(KMinAirPressure);
+             //   mGraph.getViewport().setMaxY(KMaxAirPressure);
 
                 staticLabelsFormatter.setVerticalLabels(airPressureLabels);
                 mGraph.getGridLabelRenderer().setNumVerticalLabels(1);
@@ -188,9 +188,12 @@ public class RuuviTagDataView extends LinearLayout {
             }
         }
 
+        mGraph.getLegendRenderer().setWidth(200);
+        mGraph.getLegendRenderer().setVisible(false);
         mGraph.getLegendRenderer().setVisible(true);
         mGraph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
-
+        mGraph.requestLayout();
+        mGraph.invalidate();
         newX++;
 
         xIndex.add(time);

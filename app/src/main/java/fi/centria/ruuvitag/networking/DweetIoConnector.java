@@ -32,7 +32,7 @@ public class DweetIoConnector
     public void postData(RuuvitagObject ruuvitagObject, Context context, AsyncHttpResponseHandler handler)
     {
 
-        String URL = "https://dweet.io/dweet/for/"+ruuvitagObject.getId();
+        String URL = "https://dweet.io/dweet/for/"+ruuvitagObject.getDeviceId();
          AsyncHttpClient client = new AsyncHttpClient();
 
         try {

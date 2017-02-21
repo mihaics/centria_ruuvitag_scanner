@@ -8,4 +8,5 @@
     <string name="start_scanning">START SCANNING</string>
     <string name="stop_scanning">STOP SCANNING</string>
     <string name="no_permission_to_scan_beacons">No permission to scan BLE devices</string>
+    <string name="rssi_graph_title">RSSI</string>
 </resources>

@@ -16,6 +16,7 @@ public class RuuvitagDataEvent
     double latitude = 0.0;
     double longitude = 0.0;
 
+    double accellX,accellY,accellZ;
 
     private double rssi;
 
@@ -77,13 +78,26 @@ public class RuuvitagDataEvent
         }
         else
         {
+            humidity = (pData[1])*0.5;//(int)((pData[1] >> 2) << 11);
+            double uTemp = (((pData[2] & 127) << 8) | pData[3]);
+            double  tempSign = (pData[2] >> 7) & 1;
+            temp = tempSign == 0.00 ? uTemp / 256.0 : -1.00 * uTemp / 256.0;
+            air_pressure = ((pData[4] << 8) + pData[5]) + 50000;
+            air_pressure /= 100.00;
+
+            //THIS IS UGLY
+            temp = (double)Math.round(temp * 10d) / 10d;
+            humidity = (double)Math.round(humidity * 10d) / 10d;
+            air_pressure = (double)Math.round(air_pressure * 10d) / 10d;
+
+            /*
             humidity = pData[1] * 0.5;
             double uTemp = (((pData[2] & 127) << 8) | pData[3]);
             double  tempSign = (pData[2] >> 7) & 1;
             temp = tempSign == 0.00 ? uTemp / 256.0 : -1.00 * uTemp / 256.0;
             air_pressure = ((pData[4] << 8) + pData[5]) + 50000;
             air_pressure /= 100.00;
-            time_elapsed = (pData[7] << 8) + pData[6];
+            time_elapsed = (pData[7] << 8) + pData[6];*/
         }
 
 
