@@ -116,7 +116,7 @@ public class SingleTagDataView extends Fragment implements  UpdatableFragment {
                 gauge.setValue((int) percentage);
                 valueView.setText(String.format("%1.1f",gaugeValue));
 
-                layout.setBackgroundColor(Color.argb(0x20,0x00,0xFF,0x00));
+                //layout.setBackgroundColor(Color.argb(0x20,0x00,0xFF,0x00));
             }
         });
 

@@ -8,7 +8,6 @@ public class ColorsGenerator
 {
 
     static int[] barColors = {
-            Color.rgb(93,138,168),
             Color.rgb(227,38,54),
             Color.rgb(255,191,0 ),
             Color.rgb(164,198,57),

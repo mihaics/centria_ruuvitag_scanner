@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@color/main_view_background">
 
@@ -28,6 +28,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
         android:layout_marginBottom="5dp">
 
         <Switch
@@ -36,7 +38,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/switchBackgrounState"
             android:layout_weight="1"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:layout_marginBottom="10dp" />
     </LinearLayout>
 
@@ -45,6 +47,8 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
         android:layout_below="@+id/layoutBackgroundSetting"
         android:layout_alignParentLeft="true">
 
@@ -59,6 +63,7 @@
 
         <Button
             android:text="Start scanning"
+            android:textColor="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -74,12 +79,15 @@
 
     <Button
         android:text="SHOW LOGS"
+        android:textColor="@color/white"
+        android:background="@color/colorPrimaryDark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@id/showLogsbutton"
         android:onClick="onClickshowGraphs"
         android:elevation="0dp"
-
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
         android:layout_above="@+id/textViewDeviceId"
         android:layout_alignParentLeft="true" />
 
@@ -89,8 +97,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:id="@id/textViewDeviceId"
-        android:textSize="10sp"
-        android:textColor="#ffffff" />
+        android:textSize="15sp"
+        android:textColor="#000000" />
 
     <ScrollView
         android:id="@+id/grapViewsLayout"
@@ -112,7 +120,7 @@
         android:layout_above="@id/showLogsbutton"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/main_view_background"
+        android:background="#ffffff"
         android:visibility="gone">
     </android.support.v4.view.ViewPager>
 

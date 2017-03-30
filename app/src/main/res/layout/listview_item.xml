@@ -3,8 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gauge_background"
+    android:background="@color/itemBackground"
     android:padding="10dp">
+    <View
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:id="@+id/idColorView" />
 
 
     <pl.pawelkleczkowski.customgauge.CustomGauge
@@ -19,12 +25,12 @@
         android:paddingTop="5dp"
         app:gaugePointStartColor="#ff0000"
         app:gaugePointEndColor="#ff0000"
-        app:gaugePointSize="5"
-        app:gaugeStartAngle="100"
-        app:gaugeSweepAngle="330"
+        app:gaugePointSize="10"
+        app:gaugeStartAngle="140"
+        app:gaugeSweepAngle="260"
         app:gaugeStrokeCap="BUTT"
         app:gaugeStrokeColor="@color/gauge_stroke"
-        app:gaugeStrokeWidth="7dp"
+        app:gaugeStrokeWidth="9dp"
         app:gaugeStartValue="-150"
         app:gaugeEndValue="0"/>
 
@@ -38,9 +44,9 @@
         android:layout_alignRight="@+id/gaugeRssi"
         android:layout_alignTop="@+id/gaugeRssi"
         android:layout_alignBottom="@+id/gaugeRssi"
+        android:textColor="@color/white"
         android:text="0"
-        android:textSize="10dp"
-        android:textStyle="bold" />
+        android:textSize="14dp" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -63,8 +69,8 @@
                 android:layout_gravity="center_vertical|center_horizontal">
                 <pl.pawelkleczkowski.customgauge.CustomGauge
                     android:id="@+id/gaugePressure"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
                     android:paddingBottom="5dp"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
@@ -72,12 +78,12 @@
                     android:layout_centerInParent="true"
                     app:gaugePointStartColor="#ff0000"
                     app:gaugePointEndColor="#ff0000"
-                    app:gaugePointSize="5"
-                    app:gaugeStartAngle="110"
-                    app:gaugeSweepAngle="300"
+                    app:gaugePointSize="10"
+                    app:gaugeStartAngle="140"
+                    app:gaugeSweepAngle="260"
                     app:gaugeStrokeCap="BUTT"
                     app:gaugeStrokeColor="@color/gauge_stroke"
-                    app:gaugeStrokeWidth="7dp"
+                    app:gaugeStrokeWidth="10dp"
                     app:gaugeStartValue="800"
                     app:gaugeEndValue="1200"/>
                 <TextView
@@ -90,8 +96,9 @@
                     android:layout_alignTop="@+id/gaugePressure"
                     android:layout_alignBottom="@+id/gaugePressure"
                     android:text="0"
-                    android:textSize="10dp"
-                    android:textStyle="bold" />
+                    android:textSize="14dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/gauge_title_color" />
             </RelativeLayout>
             <TextView
                 android:id="@+id/titlePressure"
@@ -101,8 +108,9 @@
                 android:text="@string/air_pressure_graph_title"
                 android:gravity="center_vertical"
                 android:layout_centerVertical="true"
-                android:textSize="10sp"
+                android:textSize="14dp"
                 android:layout_weight="1"
+
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:textColor="@color/gauge_title_color" />
         </LinearLayout>
@@ -122,8 +130,8 @@
                 android:layout_gravity="center_vertical|center_horizontal">
                 <pl.pawelkleczkowski.customgauge.CustomGauge
                     android:id="@+id/gaugeTemperature"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
                     android:paddingBottom="5dp"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
@@ -131,12 +139,12 @@
                     android:layout_centerInParent="true"
                     app:gaugePointStartColor="#ff0000"
                     app:gaugePointEndColor="#ff0000"
-                    app:gaugePointSize="5"
-                    app:gaugeStartAngle="120"
-                    app:gaugeSweepAngle="300"
+                    app:gaugePointSize="10"
+                    app:gaugeStartAngle="140"
+                    app:gaugeSweepAngle="260"
                     app:gaugeStrokeCap="BUTT"
                     app:gaugeStrokeColor="@color/gauge_stroke"
-                    app:gaugeStrokeWidth="7dp"
+                    app:gaugeStrokeWidth="10dp"
                     app:gaugeStartValue="-40"
                     app:gaugeEndValue="40"/>
                 <TextView
@@ -149,7 +157,8 @@
                     android:layout_alignTop="@+id/gaugeTemperature"
                     android:layout_alignBottom="@+id/gaugeTemperature"
                     android:text="0"
-                    android:textSize="10dp"
+                    android:textSize="14dp"
+                    android:textColor="@color/gauge_title_color"
                     android:textStyle="bold" />
             </RelativeLayout>
             <TextView
@@ -160,7 +169,7 @@
                 android:text="@string/temperature_graph_title"
                 android:gravity="center_vertical"
                 android:layout_centerVertical="true"
-                android:textSize="10sp"
+                android:textSize="14dp"
                 android:layout_weight="1"
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:textColor="@color/gauge_title_color" />
@@ -181,8 +190,8 @@
                 android:layout_gravity="center_vertical|center_horizontal">
                 <pl.pawelkleczkowski.customgauge.CustomGauge
                     android:id="@+id/gaugeHuminidity"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
                     android:paddingBottom="5dp"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
@@ -190,12 +199,12 @@
                     android:layout_centerInParent="true"
                     app:gaugePointStartColor="#ff0000"
                     app:gaugePointEndColor="#ff0000"
-                    app:gaugePointSize="5"
-                    app:gaugeStartAngle="120"
-                    app:gaugeSweepAngle="300"
+                    app:gaugePointSize="10"
+                    app:gaugeStartAngle="140"
+                    app:gaugeSweepAngle="260"
                     app:gaugeStrokeCap="BUTT"
                     app:gaugeStrokeColor="@color/gauge_stroke"
-                    app:gaugeStrokeWidth="7dp"
+                    app:gaugeStrokeWidth="10dp"
                     app:gaugeStartValue="0"
                     app:gaugeEndValue="100"/>
                 <TextView
@@ -208,7 +217,8 @@
                     android:layout_alignTop="@+id/gaugeHuminidity"
                     android:layout_alignBottom="@+id/gaugeHuminidity"
                     android:text="0"
-                    android:textSize="10dp"
+                    android:textSize="14dp"
+                    android:textColor="@color/gauge_title_color"
                     android:textStyle="bold" />
             </RelativeLayout>
             <TextView
@@ -219,8 +229,9 @@
                 android:text="@string/humidity_graph_title"
                 android:gravity="center_vertical"
                 android:layout_centerVertical="true"
-                android:textSize="10sp"
+                android:textSize="14dp"
                 android:layout_weight="1"
+
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:textColor="@color/gauge_title_color" />
 
@@ -236,7 +247,10 @@
         android:gravity="center_vertical"
         android:textSize="15sp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:textColor="@color/white"
+        android:layout_toEndOf="@+id/idColorView" />
 
     <TextView
         android:text="TextView"
@@ -245,8 +259,10 @@
         android:layout_below="@+id/beaconTitle"
         android:layout_alignParentStart="true"
         android:id="@+id/textViewLastSeen"
-        android:textColor="@color/white"
-        android:textSize="8sp" />
+        android:textColor="#AAAAAA"
+        android:textSize="12sp" />
+
+
 
 
 </RelativeLayout>

@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimary">#6060FF</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-
+    <color name="colorAccent">#3F51B5</color>
+    <color name="itemBackground">#3F51B5</color>
     <color name="graphPrimaryColor">#505050</color>
-    <color name="main_view_background">#202020</color>
-<color name="colorButtonBackground">#ffffff</color>
-<color name="gauge_background">#404040</color>
-    <color name="gauge_stroke">#AAAAAA</color>
+    <color name="main_view_background">#ffffff</color>
+    <color name="colorButtonBackground">#000000</color>
+    <color name="gauge_background">#ffffff</color>
+    <color name="gauge_stroke">#7A9ABE</color>
     <color name="gauge_title_color">#ffffff</color>
     <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="gray">#AAAAAA</color>
 </resources>

@@ -31,7 +31,7 @@ public class RuuviTagDataView extends LinearLayout {
     public static final int PRESSURE = 3;
     private TextView mViewTitle;
 
-    public static  int KMaxX = 60*2; //THIS IS THE MAX LOGGING WINDOW SIZE IN MINUTES
+    public static  int KMaxX = 60*4; //THIS IS THE MAX LOGGING WINDOW SIZE IN MINUTES
     public ArrayList<Date> xIndex = new ArrayList<Date>();
 
     HashMap<String,LineGraphSeries<DataPoint>> allSeries;
@@ -144,6 +144,7 @@ public class RuuviTagDataView extends LinearLayout {
 
     public void update(Date time, DataSnapshot data)
     {
+
         double value =  0;
 
 
@@ -180,7 +181,7 @@ public class RuuviTagDataView extends LinearLayout {
                 LineGraphSeries<DataPoint> dps = new LineGraphSeries<DataPoint>();
                 allSeries.put(devId, dps);
                 allSeries.get(devId).appendData(new DataPoint(newX, value), false, KMaxX);
-                allSeries.get(devId).setThickness(2);
+                allSeries.get(devId).setThickness(3);
                 allSeries.get(devId).setColor(data.objects.get(i).getColor());
 
                 allSeries.get(devId).setTitle("" + data.objects.get(i).getLastData().getPressure());

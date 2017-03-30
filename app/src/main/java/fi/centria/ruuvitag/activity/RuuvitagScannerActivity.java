@@ -85,7 +85,7 @@ public class RuuvitagScannerActivity extends FragmentActivity implements BeaconC
     private BeaconsListAdapter beaconsAdapter;
     private Intent myServiceIntent;
 
-    public static final int RUN_INTERVAL_MS = 10*1000; // THIS IS THE INTERVAL FOR LOGGER TO RUN
+    public static final int RUN_INTERVAL_MS = 60*1000; // THIS IS THE INTERVAL FOR LOGGER TO RUN
     private Handler mHandler = new Handler();
     private Timer mTimer = null;
     ArrayList<Pair<Date,DataSnapshot>> historicalData;
@@ -114,17 +114,19 @@ public class RuuvitagScannerActivity extends FragmentActivity implements BeaconC
                 public void run()
                 {
 
-                    Date now = GregorianCalendar.getInstance().getTime();
+                    try {
+                        Date now = GregorianCalendar.getInstance().getTime();
 
-                    DataSnapshot snapShot = new DataSnapshot();
-                    snapShot.objects = beaconsInRange;
-                    snapShot.time = System.currentTimeMillis();
+                        DataSnapshot snapShot = new DataSnapshot();
+                        snapShot.objects = beaconsInRange;
+                        snapShot.time = System.currentTimeMillis();
 
-                    historicalData.add(new Pair<Date, DataSnapshot>(now,snapShot));
+                        historicalData.add(new Pair<Date, DataSnapshot>(now, snapShot));
 
-                    huminidityGraphView.update(now,snapShot);
-                    pressureGraphView.update(now,snapShot);
-                    temperatureGraphView.update(now,snapShot);
+                        huminidityGraphView.update(now, snapShot);
+                        pressureGraphView.update(now, snapShot);
+                        temperatureGraphView.update(now, snapShot);
+                    }catch (Exception e){}
 
                 }
 

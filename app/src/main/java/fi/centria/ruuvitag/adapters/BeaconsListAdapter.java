@@ -65,11 +65,13 @@ public class BeaconsListAdapter  extends ArrayAdapter<RuuvitagObject> {
 
         RuuvitagObject p = getItem(position);
 
+        v.findViewById(R.id.idColorView).setBackgroundColor(p.getColor());
+
         if (p != null)
         {   TextView beaconTitle = (TextView) v.findViewById(R.id.beaconTitle);
-            beaconTitle.setTextColor(p.getColor());
+          //  beaconTitle.setTextColor(p.getColor());
             beaconTitle.setText(p.getId());
-
+            //beaconTitle.setBackgroundColor(p.getColor());
             long now = System.currentTimeMillis();
 
             TextView textViewLastSeen   = (TextView) v.findViewById(R.id.textViewLastSeen);
@@ -84,7 +86,7 @@ public class BeaconsListAdapter  extends ArrayAdapter<RuuvitagObject> {
 
             }
             else
-                textViewLastSeen.setTextColor(Color.WHITE);
+                textViewLastSeen.setTextColor(getContext().getColor(R.color.gray));
 
             CustomGauge gaugeRssi = (CustomGauge) v.findViewById(R.id.gaugeRssi);
             TextView textViewRssi = (TextView) v.findViewById(R.id.textViewRssi);
@@ -97,19 +99,19 @@ public class BeaconsListAdapter  extends ArrayAdapter<RuuvitagObject> {
             TextView textViewPressure = (TextView) v.findViewById(R.id.textViewPressure);
             gaugePressure.setValue((int)p.getLastData().getPressure());
             textViewPressure.setText(String.format("%1.1f",p.getLastData().getPressure()));
-            textViewPressure.setTextColor(p.getColor());
+   //         textViewPressure.setTextColor(p.getColor());
 
             CustomGauge gaugeTemperature = (CustomGauge) v.findViewById(R.id.gaugeTemperature);
             TextView textViewTemperature = (TextView) v.findViewById(R.id.textViewTemperature);
             gaugeTemperature.setValue((int)p.getLastData().getTemperature());
             textViewTemperature.setText(String.format("%1.1f",p.getLastData().getTemperature()));
-            textViewTemperature.setTextColor(p.getColor());
+     //       textViewTemperature.setTextColor(p.getColor());
 
             CustomGauge gaugeHuminidity = (CustomGauge) v.findViewById(R.id.gaugeHuminidity);
             TextView textViewHuminidity = (TextView) v.findViewById(R.id.textViewHuminidity);
             gaugeHuminidity.setValue((int)p.getLastData().getHuminidity());
             textViewHuminidity.setText(String.format("%1.1f",p.getLastData().getHuminidity()));
-            textViewHuminidity.setTextColor(p.getColor());
+      //      textViewHuminidity.setTextColor(p.getColor());
 
         }
 
