@@ -1,9 +1,8 @@
 package fi.centria.ruuvitag.data;
 
-import android.util.Base64;
 
 import fi.centria.ruuvitag.support.Base91;
-
+import fi.centria.ruuvitag.support.Base64;
 
 public class RuuvitagDataEvent
 {
@@ -50,17 +49,19 @@ public class RuuvitagDataEvent
     public void parseRuuvitagDataFromB64(String data) {
         try
         {
-            byte[] bData = Base64.decode(data,Base64.DEFAULT);
+            byte[] bData = Base64.decode(data);
+           // byte[] bData = Base64.decode(data.getBytes(),Base64.NO_PADDING | Base64.NO_WRAP);
             int pData[] = new int[8];
             for (int i = 0; i < bData.length; i++)
                 pData[i] = bData[i] & 0xFF;
 
-            //bdata[0] must be 2?
+            //bdata[0] must be 2 or 4
             parseByteData(pData,2);
         }
         catch(Exception e)
         {
-
+            int x =0;
+            x++;
         }
     }
 
